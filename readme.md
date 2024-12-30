@@ -13,8 +13,10 @@ To use this repository, create a `.env` file with the following variables:
 POSTGRES_USER=
 POSTGRES_PASSWORD=
 POSTGRES_DB=
-PGADMIN_DEFAULT_EMAIL=
+PGADMIN_DEFAULT_EMAIL=a
 PGADMIN_DEFAULT_PASSWORD=
+COUNTER_MAC = 
+COUNTER_TOKEN = 
 ```
 
 Replace `VARIABLE_NAME` and `ANOTHER_VARIABLE` with the actual variable names and their corresponding values.
