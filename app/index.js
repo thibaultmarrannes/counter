@@ -36,11 +36,12 @@ app.get('/', async (req, res) => {
 
 app.get('/', (req, res) => {
    // example: res.render('index', { title: 'Complex HTML', items: ['Item 1', 'Item 2', 'Item 3'] });
-   res.render('index', { title: 'example' });
+   res.render('index', { title: 'example', goals: ['Goal 1', 'Goal 2', 'Goal 3'] });
 });
 
-app.get('/addgoals', (req, res) => {
+app.get('/addgoal', (req, res) => {
    // in the end this should allow you to add goals, but let's start with just 1
+   res.render('addgoal', {});
 });
 
 app.get('/scanevent', (req, res) => {
