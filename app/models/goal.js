@@ -3,9 +3,25 @@ const { Client } = require('pg');
 // Database client
 const client = new Client({ connectionString: process.env.DATABASE_URL });
 
-client.connect()
-  .then(() => console.log('Connected to PostgreSQL'))
-  .catch(err => console.error('Database connection error:', err));
+async function connectWithRetry(retries = 3, delay = 10000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await client.connect();
+      console.log('Connected to PostgreSQL');
+      break;
+    } catch (err) {
+      console.error(`Database connection error (attempt ${i + 1}):`, err);
+      if (i < retries - 1) {
+        console.log(`Retrying in ${delay / 1000} seconds...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        console.error('Failed to connect to PostgreSQL after multiple attempts');
+      }
+    }
+  }
+}
+
+connectWithRetry();
 
 
 const Goal = {
