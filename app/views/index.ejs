@@ -11,12 +11,12 @@
     <div class="container">
       <h1><%= title %></h1>
       <p>Hi, This is a page still very much under construction</p>
-      here you can see a list of the currect existing goals:
-    <ul>
+      <p>Here you can see a list of the current existing goals:</p>
+      <ul>
         <% goals.forEach(function(goal) { %>
-            <li><%= goal %></li>
+          <li><strong>Name:</strong> <%= goal.name %> | <strong>Value:</strong> <%= goal.value %></li>
         <% }); %>
-    </ul>
+      </ul>
     </div>
   </body>
 </html>

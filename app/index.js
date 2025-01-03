@@ -1,6 +1,6 @@
 const express = require('express');
 const { Client } = require('pg');
-const { Counter } = require("@smiirl/smiirl-library-js");
+const Goal = require('./models/goal');
 
 const app = express();
 const port = 3000;
@@ -34,9 +34,12 @@ app.get('/', async (req, res) => {
 
 */
 
-app.get('/', (req, res) => {
-   // example: res.render('index', { title: 'Complex HTML', items: ['Item 1', 'Item 2', 'Item 3'] });
-   res.render('index', { title: 'example', goals: ['Goal 1', 'Goal 2', 'Goal 3'] });
+app.get('/', async (req, res) => {
+    const goals = await Goal.getAll();
+    console.log(goals);
+    res.render('index', { title: 'example', goals: goals });
+
+
 });
 
 app.get('/addgoal', (req, res) => {
@@ -44,22 +47,23 @@ app.get('/addgoal', (req, res) => {
    res.render('addgoal', {});
 });
 
-app.get('/scanevent', (req, res) => {
-    // get the scanned goal
-    const name = req.query.name;
-    // get the goal from the database
-    // log a event in the database
-    // adjust the counter in the database
-    // return the counter
-    console.log(name);
+app.get('/scanevent', async (req, res) => {
 
-    Counter.push(12345).then(function(json) {
-        console.log("Counter Push Response", json)
-    }).catch(function(error) {
-        console.log("Counter Push Error", error)
-    }).then(function() {
-        console.log("Counter Push Done")
-    });
+    // get the scanned event
+    const name = req.query.name;
+    // get the goal from the database & check if scanned event exists
+    const goal = await Goal.findByName(name);
+    if (!goal) {
+      return res.status(404).send('Goal not found');
+    }
+    console.log(goal)
+    // log a event in the database
+    const log = await Goal.logEvent(goal.id)
+    // get the counter value
+
+    // return the counter
+
+
     res.render('goalscanned', { title: 'example', goal: name, goalpoints: 10, total: 100 });
 });
 
