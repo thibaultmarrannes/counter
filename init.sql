@@ -5,7 +5,8 @@ BEGIN
         CREATE TABLE counter (
             id SERIAL PRIMARY KEY,
             name TEXT,
-            current_value INTEGER NOT NULL
+            current_value INTEGER NOT NULL,
+            active BOOLEAN NOT NULL DEFAULT FALSE
         );
     END IF;
 END $$;
@@ -14,8 +15,8 @@ END $$;
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM public.counter) THEN
-        INSERT INTO public.counter (name, current_value)
-        VALUES ('Main', 0), ('Secondary', 0), ('Combined', 0);
+        INSERT INTO public.counter (name, current_value, active)
+        VALUES ('Main', 0, TRUE), ('Secondary', 0, FALSE), ('Combined', 0, FALSE);
     END IF;
 END $$;
 

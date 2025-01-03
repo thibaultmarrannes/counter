@@ -9,21 +9,26 @@
   </head>
   <body>
     <div class="container">
-      <h1>Add a goal here</h1>
-      <p>Hi, This is a page still very much under construction</p>
-    <form onsubmit="addGoal(event)">
-        <label for="goal">Goal:</label>
-        <input type="text" id="goal" name="goal" required>
+      <h1>your scanned a goal that doesn't exist yet!</h1>
+      <p>Do you want to add this goal so you can scan it in the future?</p>
+    <form action="/addgoal" method="post">
+        <label for="name">Goal Name:</label>
+        <input type="text" id="name" name="name" value="<%= name %>" required>
+        <br>
+        <label for="categories">What categories will this goal be used for:</label>
+        <div id="categories">
+            <% counters.forEach(function(counter) { %>
+                <input type="checkbox" id="<%= counter.id %>" name="counters" value="<%= counter.id %>">
+                <label for="<%= counter.id %>"><%= counter.name %></label>
+                <br>
+            <% }); %>
+        </div>
+        <label for="value">Goal Value:</label>
+        <input type="number" id="value" name="value" required>
+        <br>
         <button type="submit">Add Goal</button>
     </form>
-    <script>
-        function addGoal(event) {
-            event.preventDefault();
-            const goal = document.getElementById('goal').value;
-            console.log('Goal added:', goal);
-            // Add your goal handling logic here
-        }
-    </script>
+     
     </div>
   </body>
 </html>
