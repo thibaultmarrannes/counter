@@ -1,5 +1,4 @@
 const express = require('express');
-const { Client } = require('pg');
 const Goal = require('./models/goal');
 
 const app = express();
@@ -7,18 +6,6 @@ const port = 3000;
 
 app.set('view engine', 'ejs'); // Set EJS as the template engine
 app.set('views', './views'); // Set the views directory
-
-
-
-// Connection string from environment variable
-const connectionString = process.env.DATABASE_URL;
-
-// Database client
-const client = new Client({ connectionString });
-
-client.connect()
-  .then(() => console.log('Connected to PostgreSQL'))
-  .catch(err => console.error('Database connection error:', err));
 
 // Basic route
 

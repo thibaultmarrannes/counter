@@ -2,7 +2,11 @@ const { Client } = require('pg');
 
 // Database client
 const client = new Client({ connectionString: process.env.DATABASE_URL });
-client.connect();
+
+client.connect()
+  .then(() => console.log('Connected to PostgreSQL'))
+  .catch(err => console.error('Database connection error:', err));
+
 
 const Goal = {
   async getAll() {
@@ -17,7 +21,7 @@ const Goal = {
     return result.rows[0];
   },
   async logEvent(id) {
-    const result = await client.query('INSERT INTO goal_events (goal_id, event_date) VALUES ($1, $2)', [id, new Date()]);
+    const result = await client.query('INSERT INTO events (goal_id, event_date) VALUES ($1, $2)', [id, new Date()]);
     return result
   }
 };

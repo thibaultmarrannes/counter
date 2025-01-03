@@ -24,3 +24,5 @@ Replace `VARIABLE_NAME` and `ANOTHER_VARIABLE` with the actual variable names an
 Run docker-compose up --build
 
 you should be able to access the express server on port 3000
+
+you should be able to acces the PG Admin interface on port 8080, log in using the credentials from the .env file. To link the database 
