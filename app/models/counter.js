@@ -5,7 +5,7 @@ const Counter = {
   async getAll() {
     const result = await client.query('SELECT * FROM counter');
     console.log(result)
-    return result.rows;
+    return result.rows; //test
   },
   async getActiveCounter() {
     const result = await client.query('select * from counter where active = true')

@@ -1,24 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <style>
-      body { font-family: Arial, sans-serif; }
-      .container { margin: 20px; }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1><%= title %></h1>
-      <p>Hi, This is a page still very much under construction</p>
-      <p>Here you can see a list of the current existing goals:</p>
-      <ul>
-        <% goals.forEach(function(goal) { %>
-          <li><strong>Name:</strong> <%= goal.name %> | <strong>Value:</strong> <%= goal.value %></li>
-        <% }); %>
+<div class="container">
+  <h1><%= title %></h1>
+  <p>Hi, This is a page still very much under construction</p>
+  <p>Here you can see a list of the current existing goals:</p>
+  <ul>
+    <% goals.forEach(function(goal) { %>
+      <li><strong>Name:</strong> <%= goal.name %> | <strong>Value:</strong> <%= goal.value %></li>
+    <% }); %>
 
-        The currect score of the active counter is <%= currentscore %> 
-      </ul>
-    </div>
-  </body>
-</html>
+    The currect score of the active counter is <%= currentscore %> 
+  </ul>
+</div>
