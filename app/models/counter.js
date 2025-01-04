@@ -1,4 +1,4 @@
-const client = require('../db')
+const client = require('../helper/db')
 
 const Counter = {
 

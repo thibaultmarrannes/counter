@@ -3,7 +3,7 @@ const Goal = require('./models/goal');
 const Score = require('./models/score');
 const Event = require('./models/event');
 const Counter = require('./models/counter');
-const client = require('./db');
+const client = require('./helper/db');
 const expressLayouts = require('express-ejs-layouts');
 
 
@@ -79,6 +79,17 @@ app.get('/scanevent', async (req, res) => {
 
     // get the scanned event
     const name = req.query.name;
+
+    if (name === 'showoff_plus' || name === 'showoff_minus') {
+      // Do something different
+      console.log(`Special event: ${name}`);
+      
+      const show = await Counter.showoff(name);
+
+
+      res.render('showoff', { title: 'showoff' });
+      return;
+    }
     // get the goal from the database & check if scanned event exists
     const goal = await Goal.findGoalByName(name);
     if (!goal) {
