@@ -2,7 +2,18 @@
 
 This repo is the API server and database for controlling a smiirl custom counter (https://www.smiirl.com/en/counter/category/custom)
 
-The goals is to be able to scan an NFC chip and use this as a trigger for adding or subtracting from the counter
+The goals is to be able to scan an NFC chip and use this as a trigger for adding or subtracting from the counter.
+
+In scope: 
+
+1. You can add as many goals (scannable by NFC) as you want and add them to as many Counters.  <-- Done
+
+Example: "Running 5K" can be a goal that is linked to a counter "KM ran in 2025" but can also be added to the "Workouts" counter
+
+2. You can add as many Counters as you want <-- Done ish, possible in the DB, no front-end for it yet.
+3. You can easily select what Counter actually needs to be shown on the Smiirl physical counter <-- To Do
+4. Some graphs would be nice <-- Backlog
+5. Some reminders/nudges a la duolingo might be nice to have.. <-- Backlog
 
 # Project Setup
 
@@ -32,7 +43,8 @@ docker-compose up --build
 
 
 - you should be able to access the express server on port 3000
-- you should be able to acces the PG Admin interface on port 8080, log in using the credentials from the .env file. To link the database 
+- OPTIONAL: you should be able to acces the PG Admin interface on port 8080, log in using the credentials from the .env file. To link the database 
+- OPTIONAL: When you're logged in to PG admin, you can then add the database so you can see the values it.
 
 
 To be able to fully use this project you will need to host this project somewhere. Personally I just host it on a Synology NAS and link a domain name to it with Cloudflare zero trust tunnels. Plenty of info on Youtube if you're interested in it. 
