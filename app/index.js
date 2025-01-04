@@ -17,6 +17,8 @@ app.set('view engine', 'ejs'); // Set EJS as the template engine
 app.set('views', './views'); // Set the views directory
 app.set('layout', 'layout'); // Set the default layout file (relative to the 'views' directory)
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public')); // Serve static files from the "public" directory
+
 
 
 // Basic route
@@ -37,12 +39,13 @@ app.get('/', async (req, res) => {
 
 app.get('/', async (req, res) => {
     const goals = await Goal.getAll();
+    const host = req.get('host');
     const setcounter = await Counter.setActiveCounter(8)
     const currentScore = await Score.getActiveScore()
     console.log(setcounter);
     console.log(goals);
     console.log(currentScore)
-    res.render('index', { title: 'example', goals: goals, currentscore: currentScore});
+    res.render('index', { title: 'Overview', goals: goals, currentscore: currentScore, host:host});
 
 
 });

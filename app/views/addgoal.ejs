@@ -1,22 +1,41 @@
-<div class="container">
-    <h1>your scanned a goal that doesn't exist yet!</h1>
+<div class="container mt-5">
+    <h1 class="mb-4">You scanned a goal that doesn't exist yet!</h1>
     <p>Do you want to add this goal so you can scan it in the future?</p>
-    <form action="/addgoal" method="post">
-    <label for="name">Goal Name:</label>
-    <input type="text" id="name" name="name" value="<%= name %>" required>
-    <br>
-    <label for="categories">What categories will this goal be used for:</label>
-    <div id="categories">
-        <% counters.forEach(function(counter) { %>
-            <input type="checkbox" id="<%= counter.id %>" name="counters" value="<%= counter.id %>">
-            <label for="<%= counter.id %>"><%= counter.name %></label>
-            <br>
-        <% }); %>
-    </div>
-    <label for="value">Goal Value:</label>
-    <input type="number" id="value" name="value" required>
-    <br>
-    <button type="submit">Add Goal</button>
+    <form action="/addgoal" method="post" class="needs-validation" novalidate>
+        <!-- Goal Name -->
+        <div class="mb-3">
+            <label for="name" class="form-label">Goal Name:</label>
+            <input type="text" id="name" name="name" class="form-control" value="<%= name %>" required>
+            <div class="invalid-feedback">
+                Please provide a goal name.
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="mb-3">
+            <label for="categories" class="form-label">What categories will this goal be used for:</label>
+            <div id="categories" class="ps-3">
+                <% counters.forEach(function(counter) { %>
+                    <div class="form-check">
+                        <input type="checkbox" id="<%= counter.id %>" name="counters" value="<%= counter.id %>" class="form-check-input">
+                        <label for="<%= counter.id %>" class="form-check-label"><%= counter.name %></label>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+
+        <!-- Goal Value -->
+        <div class="mb-3">
+            <label for="value" class="form-label">Goal Value:</label>
+            <input type="number" id="value" name="value" class="form-control" required>
+            <div class="invalid-feedback">
+                Please provide a valid value for the goal.
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Add Goal</button>
+        </div>
     </form>
 </div>
- 
