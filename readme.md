@@ -24,10 +24,10 @@ COUNTER_TOKEN =
 Replace `POSTGRES_USER` etc with the actual variable names and their corresponding values. You can fill in whatever you want, only the COUNTER_MAC and ther COUNTER_TOKEN are actual values that you need to get from Smiirl. Visit their help article on more info on how to get that information: https://help.smiirl.com/article/292-how-can-i-get-my-counter-id-and-token-for-zapier-api
 
 
-To actually run the project do the following:
+To actually run the project run the following command from within the root folder:
 
 ```
-Run docker-compose up --build
+docker-compose up --build
 ```
 
 
