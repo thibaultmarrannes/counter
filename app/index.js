@@ -6,9 +6,6 @@ const Counter = require('./models/counter');
 const client = require('./helper/db');
 const expressLayouts = require('express-ejs-layouts');
 
-
-
-
 const app = express();
 const port = 3000;
 
@@ -20,8 +17,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public')); // Serve static files from the "public" directory
 
 
-
-// Basic route
 
 
 
