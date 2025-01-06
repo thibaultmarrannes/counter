@@ -3,7 +3,7 @@
 This repo is the API server and database for controlling a smiirl custom counter (https://www.smiirl.com/en/counter/category/custom)
 
 The goals is to be able to scan an NFC chip and use this as a trigger for adding or subtracting from the counter.
-
+git 
 In scope: 
 
 1. You can add as many goals (scannable by NFC) as you want and add them to as many Counters.  <-- Done
@@ -12,8 +12,9 @@ Example: "Running 5K" can be a goal that is linked to a counter "KM ran in 2025"
 
 2. You can add as many Counters as you want <-- Done ish, possible in the DB, no front-end for it yet.
 3. You can easily select what Counter actually needs to be shown on the Smiirl physical counter <-- To Do
-4. Some graphs would be nice <-- Backlog
-5. Some reminders/nudges a la duolingo might be nice to have.. <-- Backlog
+4. Get notification / nudging mails when you're doing great or not so great <-- Ongoing
+5. Some graphs would be nice <-- Backlog
+6. Some reminders/nudges a la duolingo might be nice to have.. <-- Backlog
 
 # Project Setup
 
@@ -30,9 +31,13 @@ PGADMIN_DEFAULT_EMAIL=
 PGADMIN_DEFAULT_PASSWORD=
 COUNTER_MAC = 
 COUNTER_TOKEN = 
+SENDGRID_API_KEY =
+
 ```
 
 Replace `POSTGRES_USER` etc with the actual variable names and their corresponding values. You can fill in whatever you want, only the COUNTER_MAC and ther COUNTER_TOKEN are actual values that you need to get from Smiirl. Visit their help article on more info on how to get that information: https://help.smiirl.com/article/292-how-can-i-get-my-counter-id-and-token-for-zapier-api
+
+If you want to stay updated via mail, you can also add a (free) Sendgrid API key. 
 
 
 To actually run the project run the following command from within the root folder:

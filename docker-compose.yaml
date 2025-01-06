@@ -12,6 +12,8 @@ services:
       - /usr/src/app/node_modules # Prevent overwriting node_modules
     environment:
       DATABASE_URL: postgres://postgres:password@db:5432/counterDB
+    env_file:
+      - .env 
     depends_on:
       - db
     restart: always
