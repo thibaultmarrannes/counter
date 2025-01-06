@@ -5,6 +5,8 @@ const Event = require('./models/event');
 const Counter = require('./models/counter');
 const client = require('./helper/db');
 const expressLayouts = require('express-ejs-layouts');
+const agenda = require('./agenda/agenda');
+const registerJobs = require('./agenda/jobs');
 
 const app = express();
 const port = 3000;
@@ -17,6 +19,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public')); // Serve static files from the "public" directory
 
 
+
+// Register all jobs
+registerJobs(agenda);
+
+// Start Agenda
+(async () => {
+  await agenda.start();
+
+  // Schedule a job if not already scheduled
+  const jobs = await agenda.jobs({ name: 'send weekly email' });
+  if (jobs.length === 0) {
+    await agenda.every('Monday at 10:00am', 'send weekly email', {
+      to: 'user@example.com',
+      subject: 'Weekly Update',
+      text: 'This is your weekly update email!',
+    });
+    console.log('Scheduled job: send weekly email');
+  }
+})();
 
 
 
@@ -113,6 +134,19 @@ app.get('/counter', (req, res) => {
     // set the json response
     // return the counter
     res.json({ counter: 100 });
+});
+
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+  console.log('Shutting down agenda gracefully...');
+  await agenda.stop();
+  process.exit(0);
+});
+
+process.on('SIGINT', async () => {
+  console.log('Shutting down agenda gracefully...');
+  await agenda.stop();
+  process.exit(0);
 });
 
 // Start server

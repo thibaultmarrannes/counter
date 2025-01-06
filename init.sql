@@ -88,3 +88,27 @@ BEGIN
             (3, NOW() - INTERVAL '1 day' * FLOOR(RANDOM() * 10), 1);
     END IF;
 END $$;
+
+
+-- Create table `agenda_jobs` if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'agenda_jobs') THEN
+        CREATE TABLE agenda_jobs (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            data JSONB,
+            priority INTEGER DEFAULT 0,
+            next_run_at TIMESTAMP WITH TIME ZONE,
+            locked_at TIMESTAMP WITH TIME ZONE,
+            last_run_at TIMESTAMP WITH TIME ZONE,
+            last_finished_at TIMESTAMP WITH TIME ZONE,
+            repeat_interval VARCHAR(255),
+            repeat_timezone VARCHAR(255),
+            type VARCHAR(20) DEFAULT 'single',
+            unique_key VARCHAR(255),
+            unique_key_expire TIMESTAMP WITH TIME ZONE,
+            disabled BOOLEAN DEFAULT FALSE
+        );
+    END IF;
+END $$;
