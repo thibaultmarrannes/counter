@@ -1,7 +1,7 @@
 const sendEmailJob = require('./sendEmail');
-const otherJob = require('./otherJob');
+const weeklyUpdateJob = require('./weeklyUpdate');
 
 module.exports = (agenda) => {
   sendEmailJob(agenda);
-  otherJob(agenda);
+  weeklyUpdateJob(agenda);
 };

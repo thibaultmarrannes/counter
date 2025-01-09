@@ -3,7 +3,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 
 const Sendgrid = {
-    async sendTest(test) {
+    async sendTest(recipient, message) {
         const msg = {
             to: 'test@example.com', // Change to your recipient
             from: 'thibault@propeller', // Change to your verified sender

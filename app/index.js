@@ -5,129 +5,69 @@ const Event = require('./models/event');
 const Counter = require('./models/counter');
 const client = require('./helper/db');
 const expressLayouts = require('express-ejs-layouts');
-const agenda = require('./agenda/agenda');
-const registerJobs = require('./agenda/jobs');
+const Smiirl = require('./helper/smiirl');
+
 
 const app = express();
-const port = 3000;
+const port = process.env.LOCAL_PORT || 3000;
 
 app.use(expressLayouts);
 app.set('view engine', 'ejs'); // Set EJS as the template engine
 app.set('views', './views'); // Set the views directory
-app.set('layout', 'layout'); // Set the default layout file (relative to the 'views' directory)
+app.set('layout', 'pages/layout'); // Set the default layout file (relative to the 'views/pages' directory)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public')); // Serve static files from the "public" directory
 
 
-
-// Register all jobs
-registerJobs(agenda);
-
-// Start Agenda
-(async () => {
-  await agenda.start();
-
-  // Schedule a job if not already scheduled
-  const jobs = await agenda.jobs({ name: 'send weekly email' });
-  if (jobs.length === 0) {
-    await agenda.every('Monday at 10:00am', 'send weekly email', {
-      to: 'user@example.com',
-      subject: 'Weekly Update',
-      text: 'This is your weekly update email!',
-    });
-    console.log('Scheduled job: send weekly email');
-  }
-})();
-
-
-
-/*
 app.get('/', async (req, res) => {
-  try {
-    const result = await client.query('SELECT NOW()');
-    res.send(`this is a test PostgreSQL connected. Server time: ${result.rows[0].now}`);
-  } catch (error) {
-    res.status(500).send('Error fetching data from database');
-  }
-});
-
-*/
-
-app.get('/', async (req, res) => {
-    const goals = await Goal.getAll();
-    const host = req.get('host');
-    const setcounter = await Counter.setActiveCounter(8)
-    const currentScore = await Score.getActiveScore()
-    console.log(setcounter);
-    console.log(goals);
-    console.log(currentScore)
-    res.render('index', { title: 'Overview', goals: goals, currentscore: currentScore, host:host});
-
-
-});
-
-app.post('/addgoal', async (req, res) => {
-  try {
-    const name = req.body.name; // Goal name
-    const value = parseInt(req.body.value, 10); // Goal value
-    const counters = req.body.counters; // Selected counters (array or string)
-
-    // Ensure counters is always an array
-    const selectedCounters = Array.isArray(counters) ? counters : [counters];
-
-    console.log('Goal Name:', name);
-    console.log('Goal Value:', value);
-    console.log('Selected Counters:', selectedCounters);
-
-    const addGoal = await Goal.addGoal(name, value, counters);
-    console.log("Add goal success")
-    console.log(addGoal)
-
-    res.redirect('/'); // Replace with the page you want to redirect to
-} catch (error) {
-    console.error('Error adding goal:', error);
-    res.status(500).send('An error occurred while adding the goal.');
-}
+   
+    res.render('pages/index', { title: 'Overview'});
 });
 
 
 app.get('/scanevent', async (req, res) => {
 
     // get the scanned event
-    const name = req.query.name;
+    const goal_id = req.query.goal_id;
+    
 
-    if (name === 'showoff_plus' || name === 'showoff_minus') {
+    if (goal_id === 'showoff_plus' || goal_id === 'showoff_minus') {
       // Do something different
-      console.log(`Special event: ${name}`);
-      
-      const show = await Counter.showoff(name);
-
-
+      console.log(`Special event: ${goal_id}`);
+      const show = await Counter.showoff(goal_id);
       res.render('showoff', { title: 'showoff' });
       return;
     }
-    // get the goal from the database & check if scanned event exists
-    const goal = await Goal.findGoalByName(name);
-    if (!goal) {
-      counters = await Counter.getAll();
-      res.render('addgoal', { title: 'Add Goal', name: name, counters:counters });
-      return;
-    }
-    
+
+    const goal = await Goal.getGoal(goal_id);
     console.log(goal)
-    // log a event in the database
-    const log = await Event.logEvent(goal.id)
+
+    const log = await Event.logEvent(goal_id, goal.base_points);
     // check if event is part of the active counter
     console.log(log)
     
     //get the updated score
-    const displayScore = await Score.getActiveScore()
+    const displayScore = await Score.getScore()
     // set the proper score on the Smiirl device
+    const smiirl = await Smiirl.setCounter(displayScore);
+    console.log(smiirl)
+
+
     console.log(displayScore)
 
 
-    res.render('goalscanned', { title: 'Your goal was scanned succesfully!', goal: goal.name, goalpoints: goal.value, total: displayScore });
+    res.redirect(`/goalscanned?goal=${goal.name}&goalpoints=${goal.base_points}&total=${displayScore}`);
 });
+
+app.get('/goalscanned', (req, res) => {
+ 
+    const goal = req.query.goal;
+    const goalpoints = req.query.goalpoints;
+    const total = req.query.total;
+    res.render('pages/goalscanned', { title: 'Goal Scanned', goal, goalpoints, total });
+});
+
+
 
 app.get('/counter', (req, res) => {
     // get the counter value from the database
@@ -136,18 +76,6 @@ app.get('/counter', (req, res) => {
     res.json({ counter: 100 });
 });
 
-// Graceful shutdown
-process.on('SIGTERM', async () => {
-  console.log('Shutting down agenda gracefully...');
-  await agenda.stop();
-  process.exit(0);
-});
-
-process.on('SIGINT', async () => {
-  console.log('Shutting down agenda gracefully...');
-  await agenda.stop();
-  process.exit(0);
-});
 
 // Start server
 app.listen(port, () => {

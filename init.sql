@@ -1,114 +1,75 @@
--- Create table `counter` if it doesn't exist
+-- Create table `Goals` if it doesn't exist
+
+-- Create table `Categories` if it doesn't exist
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'counter') THEN
-        CREATE TABLE counter (
+    IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'categories') THEN
+        CREATE TABLE categories (
             id SERIAL PRIMARY KEY,
-            name TEXT,
-            current_value INTEGER NOT NULL,
-            active BOOLEAN NOT NULL DEFAULT FALSE
-        );
+            name TEXT NOT NULL
+            );
     END IF;
 END $$;
 
--- Insert initial data into `counter` if the table is empty
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM public.counter) THEN
-        INSERT INTO public.counter (name, current_value, active)
-        VALUES ('Main', 0, TRUE), ('Secondary', 0, FALSE), ('Combined', 0, FALSE);
-    END IF;
-END $$;
-
--- Create table `goals` if it doesn't exist
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'goals') THEN
         CREATE TABLE goals (
             id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
-            value INTEGER NOT NULL
+            base_points INTEGER NOT NULL,
+            category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL
         );
     END IF;
 END $$;
 
--- Insert initial data into `goals` if the table is empty
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM public.goals) THEN
-        INSERT INTO public.goals (name, value)
-        VALUES ('test', 5), ('test2', 10), ('test3', 1);
-    END IF;
-END $$;
 
--- Create table `counter_goals` if it doesn't exist
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'counter_goals') THEN
-        CREATE TABLE counter_goals (
-            id SERIAL PRIMARY KEY,
-            counter_id INTEGER REFERENCES counter(id) ON DELETE CASCADE,
-            goal_id INTEGER REFERENCES goals(id) ON DELETE CASCADE
-        );
-    END IF;
-END $$;
 
--- Insert initial data into `counter_goals` if the table is empty
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM public.counter_goals) THEN
-        INSERT INTO public.counter_goals (counter_id, goal_id)
-        VALUES (1, 1), (1, 2), (2, 3), (3, 1), (3, 2), (3, 3);
-    END IF;
-END $$;
-
--- Create table `events` if it doesn't exist
+-- Create table `Events` if it doesn't exist
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'events') THEN
         CREATE TABLE events (
             id SERIAL PRIMARY KEY,
-            goal_id INTEGER REFERENCES goals(id) ON DELETE CASCADE,
             event_date TIMESTAMP NOT NULL,
-            score INTEGER
+            goal_id INTEGER REFERENCES goals(id) ON DELETE CASCADE,
+            created_dt TIMESTAMP DEFAULT NOW() NOT NULL,
+            points INTEGER NOT NULL
         );
     END IF;
 END $$;
 
--- Insert initial data into `events` if the table is empty
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM public.events) THEN
-        INSERT INTO public.events (goal_id, event_date, score)
-        VALUES 
-            (1, NOW() - INTERVAL '1 day' * FLOOR(RANDOM() * 10), 5),
-            (1, NOW() - INTERVAL '1 day' * FLOOR(RANDOM() * 10), 5),
-            (2, NOW() - INTERVAL '1 day' * FLOOR(RANDOM() * 10), 10),
-            (3, NOW() - INTERVAL '1 day' * FLOOR(RANDOM() * 10), 1),
-            (3, NOW() - INTERVAL '1 day' * FLOOR(RANDOM() * 10), 1);
-    END IF;
-END $$;
 
+-- Insert dummy data into the `categories` table with predefined IDs
+INSERT INTO categories (id, name)
+VALUES
+    (1, 'Fitness'),
+    (2, 'Household'),
+    (3, 'Cats'),
+    (4, 'Health'),
+    (5, 'Unhealthy')
+ON CONFLICT DO NOTHING;
 
--- Create table `agenda_jobs` if it doesn't exist
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'agenda_jobs') THEN
-        CREATE TABLE agenda_jobs (
-            id SERIAL PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            data JSONB,
-            priority INTEGER DEFAULT 0,
-            next_run_at TIMESTAMP WITH TIME ZONE,
-            locked_at TIMESTAMP WITH TIME ZONE,
-            last_run_at TIMESTAMP WITH TIME ZONE,
-            last_finished_at TIMESTAMP WITH TIME ZONE,
-            repeat_interval VARCHAR(255),
-            repeat_timezone VARCHAR(255),
-            type VARCHAR(20) DEFAULT 'single',
-            unique_key VARCHAR(255),
-            unique_key_expire TIMESTAMP WITH TIME ZONE,
-            disabled BOOLEAN DEFAULT FALSE
-        );
-    END IF;
-END $$;
+-- Reset the sequence to ensure it starts from the next available ID
+SELECT setval(pg_get_serial_sequence('categories', 'id'), MAX(id)) FROM categories;
+
+-- Insert dummy data into the `goals` table
+INSERT INTO goals (name, base_points, category_id)
+VALUES
+    ('treadmill - 5 min', 1, 1),
+    ('treadmill - 1u', 12, 1),
+    ('treadmill - 2u', 30, 1),
+    ('threadmill - 3u', 60, 1),
+    ('Dishwasher', 1, 2),
+    ('washing machine', 1, 2),
+    ('dryer', 1, 2),
+    ('1 litterbox', 2, 3),
+    ('2 litterboxes', 6, 3),
+    ('fresh water', 1, 3),
+    ('OMAD', 1, 4),
+    ('Cook a meal', 5, 4),
+    ('Pizzahut', -100, 5),
+    ('Alcohol', -25, 5),
+    ('Delivery', -50, 5),
+    ('Candy / Chips', -25, 5)
+ON CONFLICT DO NOTHING;
