@@ -6,15 +6,20 @@ html, body {
 }
 
 body {
-  display: flex; /* Ensures the body stretches fully even with minimal content */
-  flex-direction: column; /* Default flow */
-  min-height: 100%; /* Ensures it stretches even with little content */
-  background: rgb(167, 255, 171); /* Fallback solid color */
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: rgb(167, 255, 171);
   background: linear-gradient(357deg, rgb(167, 255, 171) 0%, rgb(0, 174, 86) 100%);
-  background-size: cover; /* Ensures gradient covers the viewport */
-  color: #fff; /* Set a default color */
+  background-size: cover;
+  color: #fff;
   align-items: center;
   justify-content: center;
+}
+
+body.negative {
+  background: rgb(255, 167, 167);
+  background: linear-gradient(357deg, rgb(255, 167, 167) 0%, rgb(174, 0, 0) 100%);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -63,4 +68,17 @@ h5 {
 
 h6 {
   font-size: 1rem;
+}
+
+.section__goalscanne {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+  margin: 1rem;
 }/*# sourceMappingURL=custom.css.map */

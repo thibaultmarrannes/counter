@@ -20,8 +20,9 @@ app.use(express.static('public')); // Serve static files from the "public" direc
 
 
 app.get('/', async (req, res) => {
-   //Ts
+   //
     res.render('pages/index', { title: 'Overview'});
+    
 });
 
 

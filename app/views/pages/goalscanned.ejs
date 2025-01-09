@@ -1,6 +1,25 @@
-  <div class="container">
-    <h1><%= title %></h1>
-    <p>Well done! You scanned <%= goal %> and this earned you <%= goalpoints %> points!</p>
-    <p>The total is now <%= total %>, keep going!</p>
+<section class="section__goalscanned">
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1><%= title %></h1>
+      <% if (goalpoints >= 0) { %>
+        <p>Well done! You scanned <%= goal %> and this earned you <%= goalpoints %> points!</p>
+      <% } else { %>
+        <p>Oh no! You scanned <%= goal %>, and this cost you <%= Math.abs(goalpoints) %> points. Try to do better next time!</p>
+      <% } %>
+      <p>The total is now <%= total %>, keep going!</p>
+    </div>
   </div>
+</div>
+</section>
 
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const points = <%= goalpoints %>; // Insert your server-rendered value here
+    if (points < 0) {
+      document.body.classList.add('negative');
+    }
+  });
+</script>
