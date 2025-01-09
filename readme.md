@@ -1,20 +1,17 @@
 # intro
 
-This repo is the API server and database for controlling a smiirl custom counter (https://www.smiirl.com/en/counter/category/custom)
+This project is made to track habits and give them points. The total score can then be displayed on a Smiirl split flap counter. 
 
-The goals is to be able to scan an NFC chip and use this as a trigger for adding or subtracting from the counter.
-git 
-In scope: 
 
-1. You can add as many goals (scannable by NFC) as you want and add them to as many Counters.  <-- Done
+V1: 
 
-Example: "Running 5K" can be a goal that is linked to a counter "KM ran in 2025" but can also be added to the "Workouts" counter
+- ability to scan goals (both positive and negative) which then stores that event in the database and updates the smiirl counter. 
 
-2. You can add as many Counters as you want <-- Done ish, possible in the DB, no front-end for it yet.
-3. You can easily select what Counter actually needs to be shown on the Smiirl physical counter <-- To Do
-4. Get notification / nudging mails when you're doing great or not so great <-- Ongoing
-5. Some graphs would be nice <-- Backlog
-6. Some reminders/nudges a la duolingo might be nice to have.. <-- Backlog
+Backlog
+
+- Send weekly recap mails with past activity
+- 
+
 
 # Project Setup
 
@@ -23,15 +20,26 @@ This project uses docker, docker-compose, npm, postgres, PGadmin and most of all
 To use this repository, create a `.env` file in the root with the following variables:
 
 ```
-# .env
+# Postgres configuration
 POSTGRES_USER=
 POSTGRES_PASSWORD=
 POSTGRES_DB=
+
+# PGAdmin configuration
 PGADMIN_DEFAULT_EMAIL=
 PGADMIN_DEFAULT_PASSWORD=
-COUNTER_MAC = 
-COUNTER_TOKEN = 
-SENDGRID_API_KEY =
+
+# Smiirl configuration
+COUNTER_MAC=
+COUNTER_TOKEN=
+
+# Sendgrid configuration
+SENDGRID_API_KEY=
+
+# Ports configuration
+LOCAL_PORT=3011
+DB_PORT=4234
+PGADMIN_PORT=5043
 
 ```
 
@@ -47,8 +55,8 @@ docker-compose up --build
 ```
 
 
-- you should be able to access the express server on port 3000
-- OPTIONAL: you should be able to acces the PG Admin interface on port 8080, log in using the credentials from the .env file. To link the database 
+- you should be able to access the express server on the port you filled in in the .env
+- OPTIONAL: you should be able to acces the PG Admin interface on the pgadmin port from the .env, log in using the credentials from the .env file. To link the database 
 - OPTIONAL: When you're logged in to PG admin, you can then add the database so you can see the values it.
 
 

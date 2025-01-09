@@ -1,0 +1,19 @@
+# Postgres configuration
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+
+# PGAdmin configuration
+PGADMIN_DEFAULT_EMAIL=
+PGADMIN_DEFAULT_PASSWORD=
+
+# Smiirl configuration
+COUNTER_MAC=
+COUNTER_TOKEN=7
+
+# Sendgrid configuration
+SENDGRID_API_KEY=SG.
+# Ports configuration
+LOCAL_PORT=3011
+DB_PORT=4234
+PGADMIN_PORT=5043
